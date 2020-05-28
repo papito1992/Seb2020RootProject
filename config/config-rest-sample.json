@@ -1,0 +1,8 @@
+{ 
+  "playerName": "http://wsb-challenge1.baltic.seb.net", // your bot name, should be unique 
+  "teamName": "5Star", // your team name 
+  "teamPassword": "triusis", // your team password 
+  "communicationMethod": "REST", // indicating a REST based bot
+  "gameUrl": "http://wsb-challenge1.baltic.seb.net/", // game server endpoint
+  "communicationRestEndpoint": "http://localhost:5000" // endpoint where your bot is running 
+}
