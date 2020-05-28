@@ -5,7 +5,7 @@ const doPrototypeStuff = (req, res, next) => {
     if (req.body.gameState === 'TEAM_PICK') {
         res.json({
             "action": "PICK_TEAM",
-            "teamFighters": ["TONK", "SUNFLOWER", "VOIDWALKER"]
+            "teamFighters": ["TONK", "POE", "VOIDWALKER"]
         })
     }
 
@@ -23,9 +23,10 @@ const doPrototypeStuff = (req, res, next) => {
         //agresyviai varom visad
         //kolkas visad voidwalker
         const ourFighters = req.body.currentPlayer.fighters;
+        const enemyFighters = req.body.opposingPlayer.fighters;
         console.log(ourFighters);
         const activeFighter = getCurrentActiveFighter(ourFighters);
-        const sunflower = getAliveFighterByName(ourFighters, "SUNFLOWER");
+        const poe = getAliveFighterByName(ourFighters, "POE");
         let fighterTurnOrder = [];
         // if (isOurHealthLow(activeFighter)) {
         //     console.log(sunflower.skills);
@@ -50,21 +51,26 @@ const doPrototypeStuff = (req, res, next) => {
         //     }
         // }
         fighterTurnOrder.push(activeFighter.fighterClass);
-        if (isOurHealthLow(activeFighter)) {
+        if ((isOurHealthLow(activeFighter, 0.25) && activeFighter.fighterClass !== "POE")) {
 
-            if (canSwitch(req.body.currentPlayer) && getAliveFighterByName(ourFighters, "TONK")
-                && activeFighter.fighterClass !== "TONK") {
+            if (canSwitch(req.body.currentPlayer) && getAliveFighterByName(ourFighters, "POE")) {
                 res.json({
                     "action": "SWITCH_FIGHTER",
-                    "activeFighter": "TONK"
+                    "activeFighter": "POE"
                 })
-                return;
-            } else if (sunflower != null && isSkillUsable(sunflower.skills, "HEAL_TEAM_150")) {
-                res.json({
-                    "action": "SWITCH_FIGHTER",
-                    "activeFighter": "SUNFLOWER"
-                })
-                return;
+            } else if (canSwitch(req.body.currentPlayer) && getAliveFighterByName(ourFighters, "TONK")
+                    && activeFighter.fighterClass !== "TONK") {
+                    res.json({
+                        "action": "SWITCH_FIGHTER",
+                        "activeFighter": "TONK"
+                    })
+                    return;
+
+                // else if (sunflower != null && isSkillUsable(sunflower.skills, "HEAL_TEAM_150")) {
+                //     res.json({
+                //         "action": "SWITCH_FIGHTER",
+                //         "activeFighter": "SUNFLOWER"
+                //     })
             } else {
                 res.json({
                     "action": "BATTLE",
@@ -83,10 +89,15 @@ const doPrototypeStuff = (req, res, next) => {
             skillToUse = "HEAL_TEAM_150"
         } else if (activeFighter.fighterClass === 'SUNFLOWER' && isSkillUsable(activeFighter.skills, "ROOT")) {
             skillToUse = "ROOT"
-        } else if (activeFighter.fighterClass === 'TONK' && isSkillUsable(activeFighter.skills, "ATTACK_WEAKEST_100")) {
+        } else if (activeFighter.fighterClass === 'TONK' && isSkillUsable(activeFighter.skills, "ATTACK_WEAKEST_100") && !isEnemyAlone(enemyFighters)) {
             skillToUse = "ATTACK_WEAKEST_100"
         } else if (activeFighter.fighterClass === 'TONK' && isSkillUsable(activeFighter.skills, "HEAL_200")) {
             skillToUse = "HEAL_200"
+        } else if (activeFighter.fighterClass === 'POE' && isSkillUsable(activeFighter.skills, "WEAKEN_50")) {
+            skillToUse = "WEAKEN_50"
+        } else if (activeFighter.fighterClass === 'POE' && isSkillUsable(activeFighter.skills, "DESTRUCT_SELF")
+            && isOurHealthLow(activeFighter, 0.30) && !isEnemyAlone(enemyFighters)) {
+            skillToUse = "DESTRUCT_SELF"
         }
 
 
@@ -108,8 +119,8 @@ const isSkillUsable = (skills, skillName) => {
     return foundSkill.usableIn == 0;
 }
 
-const isOurHealthLow = (fighter) => {
-    return (fighter.currentHealth / fighter.maxHealth) < 0.25
+const isOurHealthLow = (fighter, proc) => {
+    return (fighter.currentHealth / fighter.maxHealth) < proc
 }
 
 const getAliveFighterByName = (fighters, fighterName) => {
@@ -119,6 +130,8 @@ const getAliveFighterByName = (fighters, fighterName) => {
 const canSwitch = (player) => {
     return player.switchUsableIn == 0;
 }
-
+const isEnemyAlone = (enemyFighters) => {
+    return (enemyFighters.filter(fighter => fighter.status === "DEAD" ).length === 2)
+}
 
 exports.doPrototypeStuff = doPrototypeStuff;
