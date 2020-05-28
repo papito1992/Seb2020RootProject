@@ -8,7 +8,7 @@ const getRandomNumber = (req, res, next) => {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    res.json({luckyNumber});
+    res.json({luckyNumber}) ;
 };
 
 exports.getRandomNumber = getRandomNumber;
