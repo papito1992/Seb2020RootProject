@@ -50,36 +50,28 @@ const doPrototypeStuff = (req, res, next) => {
         //         return;
         //     }
         // }
-        fighterTurnOrder.push(activeFighter.fighterClass);
+        //fighterTurnOrder.push(activeFighter.fighterClass);
         // if ((isOurHealthLow(activeFighter, 0.25) && activeFighter.fighterClass !== "POE")) {
-        if (activeFighter.fighterClass === "TONK") {
-
+        if(activeFighterGotDebuffed(activeFighter) && (activce.fighterClass == "TONK" || activeFighter.fighterClass == "VOIDWALKER" )){
             if (canSwitch(req.body.currentPlayer) && getAliveFighterByName(ourFighters, "POE")) {
                 res.json({
                     "action": "SWITCH_FIGHTER",
                     "activeFighter": "POE"
                 })
-            // } else if (canSwitch(req.body.currentPlayer) && getAliveFighterByName(ourFighters, "TONK")
-            //         && activeFighter.fighterClass !== "TONK") {
-            //         res.json({
-            //             "action": "SWITCH_FIGHTER",
-            //             "activeFighter": "TONK"
-            //         })
-            //         return;
-
-            //     // else if (sunflower != null && isSkillUsable(sunflower.skills, "HEAL_TEAM_150")) {
-            //     //     res.json({
-            //     //         "action": "SWITCH_FIGHTER",
-            //     //         "activeFighter": "SUNFLOWER"
-            //     //     })
-            // } else {
-            //     res.json({
-            //         "action": "BATTLE",
-            //         "skillName": "ATTACK"
-            //     })
-            //     return;
             }
         }
+        // else{
+        //     if (activeFighter.fighterClass === "TONK") {
+        //         if (canSwitch(req.body.currentPlayer) && getAliveFighterByName(ourFighters, "POE")) {
+        //             res.json({
+        //                 "action": "SWITCH_FIGHTER",
+        //                 "activeFighter": "POE"
+        //             })
+        //         }        
+        //     }
+        // }     
+
+            
 
         let skillToUse = "ATTACK"
         if (activeFighter.fighterClass === 'VOIDWALKER' && isSkillUsable(activeFighter.skills, "ATTACK_150")) {
@@ -133,6 +125,10 @@ const canSwitch = (player) => {
 }
 const isEnemyAlone = (enemyFighters) => {
     return (enemyFighters.filter(fighter => fighter.status === "DEAD" ).length === 2)
+}
+
+const activeFighterGotDebuffed = (fighter) => {
+    return (fighter.debuffs.length > 0)
 }
 
 exports.doPrototypeStuff = doPrototypeStuff;
