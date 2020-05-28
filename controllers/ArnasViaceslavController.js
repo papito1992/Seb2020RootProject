@@ -26,19 +26,43 @@ const doPrototypeStuff = (req, res, next) => {
         console.log(ourFighters);
         const activeFighter = getCurrentActiveFighter(ourFighters);
         const sunflower = getAliveFighterByName(ourFighters, "SUNFLOWER");
-
+        let fighterTurnOrder = [];
+        // if (isOurHealthLow(activeFighter)) {
+        //     console.log(sunflower.skills);
+        //     if (sunflower != null && isSkillUsable(sunflower.skills, "HEAL_TEAM_150")) {
+        //         res.json({
+        //             "action": "SWITCH_FIGHTER",
+        //             "activeFighter": "SUNFLOWER"
+        //         })
+        //         return;
+        //     } else if (canSwitch(req.body.currentPlayer) && getAliveFighterByName(ourFighters, "TONK")) {
+        //         res.json({
+        //             "action": "SWITCH_FIGHTER",
+        //             "activeFighter": "TONK"
+        //         })
+        //         return;
+        //     } else {
+        //         res.json({
+        //             "action": "BATTLE",
+        //             "skillName": "ATTACK"
+        //         })
+        //         return;
+        //     }
+        // }
+        fighterTurnOrder.push(activeFighter.fighterClass);
         if (isOurHealthLow(activeFighter)) {
-            console.log(sunflower.skills);
-            if (sunflower != null && isSkillUsable(sunflower.skills, "HEAL_TEAM_150")) {
-                res.json({
-                    "action": "SWITCH_FIGHTER",
-                    "activeFighter": "SUNFLOWER"
-                })
-                return;
-            } else if (canSwitch(req.body.currentPlayer) && getAliveFighterByName(ourFighters, "TONK")) {
+
+            if (canSwitch(req.body.currentPlayer) && getAliveFighterByName(ourFighters, "TONK")
+                && activeFighter.fighterClass !== "TONK") {
                 res.json({
                     "action": "SWITCH_FIGHTER",
                     "activeFighter": "TONK"
+                })
+                return;
+            } else if (sunflower != null && isSkillUsable(sunflower.skills, "HEAL_TEAM_150")) {
+                res.json({
+                    "action": "SWITCH_FIGHTER",
+                    "activeFighter": "SUNFLOWER"
                 })
                 return;
             } else {
@@ -59,6 +83,10 @@ const doPrototypeStuff = (req, res, next) => {
             skillToUse = "HEAL_TEAM_150"
         } else if (activeFighter.fighterClass === 'SUNFLOWER' && isSkillUsable(activeFighter.skills, "ROOT")) {
             skillToUse = "ROOT"
+        } else if (activeFighter.fighterClass === 'TONK' && isSkillUsable(activeFighter.skills, "ATTACK_WEAKEST_100")) {
+            skillToUse = "ATTACK_WEAKEST_100"
+        } else if (activeFighter.fighterClass === 'TONK' && isSkillUsable(activeFighter.skills, "HEAL_200")) {
+            skillToUse = "HEAL_200"
         }
 
 
