@@ -51,32 +51,33 @@ const doPrototypeStuff = (req, res, next) => {
         //     }
         // }
         fighterTurnOrder.push(activeFighter.fighterClass);
-        if ((isOurHealthLow(activeFighter, 0.25) && activeFighter.fighterClass !== "POE")) {
+        // if ((isOurHealthLow(activeFighter, 0.25) && activeFighter.fighterClass !== "POE")) {
+        if (activeFighter.fighterClass === "TONK") {
 
             if (canSwitch(req.body.currentPlayer) && getAliveFighterByName(ourFighters, "POE")) {
                 res.json({
                     "action": "SWITCH_FIGHTER",
                     "activeFighter": "POE"
                 })
-            } else if (canSwitch(req.body.currentPlayer) && getAliveFighterByName(ourFighters, "TONK")
-                    && activeFighter.fighterClass !== "TONK") {
-                    res.json({
-                        "action": "SWITCH_FIGHTER",
-                        "activeFighter": "TONK"
-                    })
-                    return;
+            // } else if (canSwitch(req.body.currentPlayer) && getAliveFighterByName(ourFighters, "TONK")
+            //         && activeFighter.fighterClass !== "TONK") {
+            //         res.json({
+            //             "action": "SWITCH_FIGHTER",
+            //             "activeFighter": "TONK"
+            //         })
+            //         return;
 
-                // else if (sunflower != null && isSkillUsable(sunflower.skills, "HEAL_TEAM_150")) {
-                //     res.json({
-                //         "action": "SWITCH_FIGHTER",
-                //         "activeFighter": "SUNFLOWER"
-                //     })
-            } else {
-                res.json({
-                    "action": "BATTLE",
-                    "skillName": "ATTACK"
-                })
-                return;
+            //     // else if (sunflower != null && isSkillUsable(sunflower.skills, "HEAL_TEAM_150")) {
+            //     //     res.json({
+            //     //         "action": "SWITCH_FIGHTER",
+            //     //         "activeFighter": "SUNFLOWER"
+            //     //     })
+            // } else {
+            //     res.json({
+            //         "action": "BATTLE",
+            //         "skillName": "ATTACK"
+            //     })
+            //     return;
             }
         }
 
