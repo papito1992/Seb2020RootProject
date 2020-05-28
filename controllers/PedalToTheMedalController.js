@@ -27,7 +27,8 @@ const getAliveFighterByName = (fighters, fighterName) => {
 }
 
 const shouldNotAttack = (opposingBot) => {
-  return opposingBot.fighters.buffs.filter(buff => buff === "IMMUNE" || buff === "REFLECT_TEAM_60").length > 0;
+  const activeFighter = getCurrentFighter(opposingBot.fighters);
+  return activeFighter.buffs.filter(buff => buff === "IMMUNE" || buff === "REFLECT_TEAM_60").length > 0;
 }
 
 const canSwitch = (player) => {
@@ -64,14 +65,13 @@ const Pedal = (req, res) => {
   if (req.body.gameState === 'IN_PROGRESS') {
       const currentPlayer = req.body.currentPlayer;
       const opposingPlayer = req.body.opposingPlayer;
-      const activeFighter = getCurrentFighter(ourFighters);
       const ourFighters = req.body.currentPlayer.fighters;
-      const sunflower = getAliveFighterByName(ourFighters, "SUNFLOWER");
+      const activeFighter = getCurrentFighter(ourFighters);
 
       // Switch every time we can
       if (canSwitch(currentPlayer)) {
-        const nextFighter = getNextFighterToSwitch(fighters);
-        return res.json(getSwitchAction(nextFighterName.fighterClass));
+        const nextFighter = getNextFighterToSwitch(ourFighters);
+        return res.json(getSwitchAction(nextFighter.fighterClass));
       }
 
       // Don't attack if enemy used immunity or reflect
