@@ -1,7 +1,8 @@
 { 
-  "playerName": "http://wsb-challenge1.baltic.seb.net",
-  "teamPassword": "triusis",
+  "playerName": "SEBINIS", 
+  "teamName": "5Stars",
+  "teamPassword": "star",
   "communicationMethod": "REST",
-  "gameUrl": "http://wsb-challenge1.baltic.seb.net/", 
-  "communicationRestEndpoint": "http://localhost:5000"
+  "gameUrl": "http://wsb-challenge1.baltic.seb.net/",
+  "communicationRestEndpoint": "http://localhost:5000/bob" 
 }
