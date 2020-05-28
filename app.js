@@ -1,12 +1,10 @@
 const express = require('express');
+const app = express();
+const port = 5000;
 const bodyParser = require('body-parser');
-
 const challengeRoute = require('./routes/challenge-route');
 
-const app = express();
-
 app.use(bodyParser.json());
-
 app.use('/', challengeRoute);
 
-app.listen(5000);
+app.listen(port, () => console.log(`Listening at http://localhost:${port}/`));
