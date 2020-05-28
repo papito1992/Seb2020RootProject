@@ -52,13 +52,19 @@ const doPrototypeStuff = (req, res, next) => {
         // }
         //fighterTurnOrder.push(activeFighter.fighterClass);
         // if ((isOurHealthLow(activeFighter, 0.25) && activeFighter.fighterClass !== "POE")) {
-        if(activeFighterGotDebuffed(activeFighter) && (activce.fighterClass == "TONK" || activeFighter.fighterClass == "VOIDWALKER" )){
+        if(activeFighterGotDebuffed(activeFighter) && (activeFighter.fighterClass === "TONK" || activeFighter.fighterClass === "VOIDWALKER" )){
             if (canSwitch(req.body.currentPlayer) && getAliveFighterByName(ourFighters, "POE")) {
                 res.json({
                     "action": "SWITCH_FIGHTER",
                     "activeFighter": "POE"
                 })
             }
+        }
+        if (activeFighter.fighterClass === "TONK" && canSwitch(activeFighter)){
+            res.json({
+                "action": "SWITCH_FIGHTER",
+                "activeFighter": "VOIDWALKER"
+            })
         }
         // else{
         //     if (activeFighter.fighterClass === "TONK") {
@@ -89,7 +95,7 @@ const doPrototypeStuff = (req, res, next) => {
         } else if (activeFighter.fighterClass === 'POE' && isSkillUsable(activeFighter.skills, "WEAKEN_50")) {
             skillToUse = "WEAKEN_50"
         } else if (activeFighter.fighterClass === 'POE' && isSkillUsable(activeFighter.skills, "DESTRUCT_SELF")
-            && isOurHealthLow(activeFighter, 0.30) && !isEnemyAlone(enemyFighters)) {
+            && isOurHealthLow(activeFighter, 0.35) && !isEnemyAlone(enemyFighters)) {
             skillToUse = "DESTRUCT_SELF"
         }
 
