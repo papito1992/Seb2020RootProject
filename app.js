@@ -7,4 +7,4 @@ const challengeRoute = require('./routes/challenge-route');
 app.use(bodyParser.json());
 app.use('/', challengeRoute);
 
-app.listen(port, () => console.log(`Listening at http://localhost:${port}/`));
+app.listen(port, () => console.log(` Listening at http://localhost:${port}/`));
