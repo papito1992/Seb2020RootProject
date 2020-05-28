@@ -4,5 +4,5 @@
   "teamPassword": "star",
   "communicationMethod": "REST",
   "gameUrl": "http://wsb-challenge1.baltic.seb.net/",
-  "communicationRestEndpoint": "http://localhost:5000/bob" 
+  "communicationRestEndpoint": "http://localhost:5000/5Star"
 }

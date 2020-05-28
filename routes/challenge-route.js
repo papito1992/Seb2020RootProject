@@ -4,6 +4,6 @@ const numberController = require('../controllers/challenge-controller');
 
 const router = express.Router();
 
-router.get('/number', numberController.getRandomNumber);
+router.post('/', numberController.getRandomNumber);
 
 module.exports = router;

@@ -5,6 +5,6 @@ const bodyParser = require('body-parser');
 const challengeRoute = require('./routes/challenge-route');
 
 app.use(bodyParser.json());
-app.use('/', challengeRoute);
+app.use('/5Star', challengeRoute);
 
 app.listen(port, () => console.log(` Listening at http://localhost:${port}/`));
