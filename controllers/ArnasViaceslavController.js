@@ -21,22 +21,46 @@ const doPrototypeStuff = (req, res, next) => {
     if (req.body.gameState === 'IN_PROGRESS') {
 
         //agresyviai varom visad
-        const activeFighter = getCurrentActiveFighter(req.body.currentPlayer.fighers);
-        const sunflower = getAliveFighterByName(req.body.currentPlayer.fighers, "SUNFLOWER");
+        //kolkas visad voidwalker
+        const ourFighters = req.body.currentPlayer.fighters;
+        console.log(ourFighters);
+        const activeFighter = getCurrentActiveFighter(ourFighters);
+        const sunflower = getAliveFighterByName(ourFighters, "SUNFLOWER");
 
-        if (isOurHealthLow(activeFighter)){
+        if (isOurHealthLow(activeFighter)) {
+            console.log(sunflower.skills);
             if (sunflower != null && isSkillUsable(sunflower.skills, "HEAL_TEAM_150")) {
                 res.json({
                     "action": "SWITCH_FIGHTER",
                     "activeFighter": "SUNFLOWER"
                 })
+                return;
+            } else if (canSwitch(req.body.currentPlayer) && getAliveFighterByName(ourFighters, "TONK")) {
+                res.json({
+                    "action": "SWITCH_FIGHTER",
+                    "activeFighter": "TONK"
+                })
+                return;
+            } else {
+                res.json({
+                    "action": "BATTLE",
+                    "skillName": "ATTACK"
+                })
+                return;
             }
         }
 
-        const skillToUse = "ATTACK"
-        if (isSkillUsable(activeFighter.skills, "ATTACK_150")){
+        let skillToUse = "ATTACK"
+        if (activeFighter.fighterClass === 'VOIDWALKER' && isSkillUsable(activeFighter.skills, "ATTACK_150")) {
             skillToUse = "ATTACK_150"
+        } else if (activeFighter.fighterClass === 'VOIDWALKER' && isSkillUsable(activeFighter.skills, "SHIELD_80_WEAKEN_SELF_50")) {
+            skillToUse = "SHIELD_80_WEAKEN_SELF_50"
+        } else if (activeFighter.fighterClass === 'SUNFLOWER' && isSkillUsable(activeFighter.skills, "HEAL_TEAM_150")) {
+            skillToUse = "HEAL_TEAM_150"
+        } else if (activeFighter.fighterClass === 'SUNFLOWER' && isSkillUsable(activeFighter.skills, "ROOT")) {
+            skillToUse = "ROOT"
         }
+
 
         res.json({
             "action": "BATTLE",
@@ -46,20 +70,26 @@ const doPrototypeStuff = (req, res, next) => {
 };
 
 const getCurrentActiveFighter = (fighters) => {
-    fighters.find((fighter) => fighter.status === "ACTIVE");
+    console.log(fighters);
+    // fighters.for
+    return fighters.find((fighter) => fighter.status === "ACTIVE");
 }
 
 const isSkillUsable = (skills, skillName) => {
-    const foundSkill = skills.find((selectedSkill) => selectedSkill.skillName == skillName);
+    const foundSkill = skills.find((selectedSkill) => selectedSkill.skillName === skillName);
     return foundSkill.usableIn == 0;
 }
 
 const isOurHealthLow = (fighter) => {
-    retrun (fighter.currentHealth / fighter.maxHealth) < 0.25
+    return (fighter.currentHealth / fighter.maxHealth) < 0.25
 }
 
 const getAliveFighterByName = (fighters, fighterName) => {
-    fighters.find((fighter) => fighter.status !== "DEAD" && fighter.fighterName == fighterName);
+    return fighters.find((fighter) => fighter.status !== "DEAD" && fighter.fighterClass === fighterName);
+}
+
+const canSwitch = (player) => {
+    return player.switchUsableIn == 0;
 }
 
 
